@@ -9,7 +9,7 @@ export async function createSessionClient() {
     .setProject(env.NEXT_PUBLIC_APPWRITE_PROJECT);
 
   const cookieStore = await cookies();
-  const session = cookieStore.get("SessionId");
+  const session = cookieStore.get("session-token");
   if (!session || !session.value) {
     throw new Error("No Session");
   }
@@ -40,7 +40,7 @@ export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
     return await account.get();
-  } catch (error) {
+  } catch (_) {
     return null;
   }
 }
