@@ -1,7 +1,8 @@
 "use server";
-import { Client, Account } from "node-appwrite";
-import { cookies } from "next/headers";
+import { SESSION_KEY } from "@/constants";
 import { env } from "@/env";
+import { cookies } from "next/headers";
+import { Account, Client, Databases } from "node-appwrite";
 
 export async function createSessionClient() {
   const client = new Client()
@@ -9,7 +10,7 @@ export async function createSessionClient() {
     .setProject(env.NEXT_PUBLIC_APPWRITE_PROJECT);
 
   const cookieStore = await cookies();
-  const session = cookieStore.get("session-token");
+  const session = cookieStore.get(SESSION_KEY);
   if (!session || !session.value) {
     throw new Error("No Session");
   }
@@ -33,14 +34,8 @@ export async function createAdminClient() {
     get account() {
       return new Account(client);
     },
+    get database() {
+      return new Databases(client);
+    },
   };
-}
-
-export async function getLoggedInUser() {
-  try {
-    const { account } = await createSessionClient();
-    return await account.get();
-  } catch (_) {
-    return null;
-  }
 }
