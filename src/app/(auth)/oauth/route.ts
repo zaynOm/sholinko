@@ -1,3 +1,4 @@
+import { SESSION_KEY } from "@/constants";
 import { createAdminClient } from "@/lib/server/appwrite";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
 
   const cookieStore = await cookies();
 
-  cookieStore.set("session-token", session.secret, {
+  cookieStore.set(SESSION_KEY, session.secret, {
     path: "/",
     httpOnly: true,
     sameSite: "strict",
