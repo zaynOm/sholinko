@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   cookieStore.set(SESSION_KEY, session.secret, {
     path: "/",
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "lax",
     secure: true,
   });
 
