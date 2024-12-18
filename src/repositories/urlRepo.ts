@@ -1,6 +1,15 @@
 import { env } from "@/env";
 import { createAdminClient } from "@/lib/server/appwrite";
 import { ID, Query } from "node-appwrite";
+import { randomBytes } from "crypto";
+
+async function generateSlug() {
+  const slug = randomBytes(5).toString("base64").slice(0, 5);
+  if (!isSlugAvailibale(slug)) {
+    generateSlug();
+  }
+  return slug;
+}
 
 async function isSlugAvailibale(url: string) {
   const { database } = await createAdminClient();
