@@ -5,9 +5,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const document = await createNewLink(body);
-    return NextResponse.json({ success: true, document });
+    return NextResponse.json(document);
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       { success: false, error: (error as Error).message },
