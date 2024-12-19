@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { Clipboard, MoreHorizontal } from "lucide-react";
+import { Check, Clipboard, MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
 
 export type Link = {
   title: string;
@@ -40,7 +41,12 @@ export const columns: ColumnDef<Link>[] = [
           {shortUrl}
           <Button
             variant="ghost"
-            onClick={() => navigator.clipboard.writeText(shortUrl)}
+            onClick={() => {
+              navigator.clipboard.writeText(shortUrl);
+              toast("Short link was copied to the clipboard.", {
+                icon: <Check size={18} />,
+              });
+            }}
           >
             <Clipboard />
           </Button>
