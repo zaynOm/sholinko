@@ -27,7 +27,7 @@ export async function createNewLink(data: formType) {
 
   if (!user) return;
 
-  const linksCount = await getLinksCount(user?.$id);
+  const linksCount = await getLinksCount();
   const slug = await generateSlug();
 
   const newLink = {
