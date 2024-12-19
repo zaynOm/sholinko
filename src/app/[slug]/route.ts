@@ -7,11 +7,12 @@ export async function GET(
 ) {
   const slug = (await params).slug;
 
-  // TODO: add viewer info capture, click count increment
+  // TODO: add viewer info capture
 
   const link = await getLinkBySlug(slug);
 
   if (link) {
+    await updateLinkByDocumentId(link?.$id, { clicks: link.clicks + 1 });
     return NextResponse.redirect(link.originalUrl);
   } else {
     return NextResponse.json({ error: "Url not found" }, { status: 404 });
