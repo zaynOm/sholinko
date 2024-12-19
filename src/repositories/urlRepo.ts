@@ -4,6 +4,22 @@ import { ID, Query } from "node-appwrite";
 import { getLoggedInUser } from "./authRepo";
 import { formType } from "@/app/dashboard/links/new/page";
 import { randomBytes } from "crypto";
+import { Link } from "@/app/dashboard/links/columns";
+
+export async function getLinksList(): Promise<Link[]> {
+  const { database } = await createAdminClient();
+  const user = await getLoggedInUser();
+
+  if (!user) return [];
+
+  const result = await database.listDocuments(
+    env.DATABASE_ID,
+    env.COLLECTION_LINKS_ID,
+    [Query.equal("userId", user.$id), Query.orderDesc("$createdAt")],
+  );
+
+  return result.documents;
+}
 
 export async function createNewLink(data: formType) {
   const { database } = await createAdminClient();
