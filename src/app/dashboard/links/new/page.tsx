@@ -12,7 +12,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import ShortLinkDialog from "@/components/Short-Link-dialog";
 import { useState } from "react";
+import { Loader } from "lucide-react";
+import { baseUrl } from "@/constants";
 
 const formSchema = z.object({
   originalUrl: z.string().url(),
@@ -32,6 +35,8 @@ export default function Page() {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [shortUrl, setShortUrl] = useState("");
 
   async function onSubmit(values: formType) {
     setLoading(true);
@@ -43,6 +48,8 @@ export default function Page() {
       });
       if (res.ok) {
         const body = await res.json();
+        setIsDialogOpen(true);
+        setShortUrl(baseUrl + body.shortUrl);
       }
     } catch (error) {
       console.error(error);
@@ -115,6 +122,11 @@ export default function Page() {
           </form>
         </Form>
       </div>
+      <ShortLinkDialog
+        isOpen={isDialogOpen}
+        shortUrl={shortUrl}
+        onClose={() => setIsDialogOpen(false)}
+      />
     </div>
   );
 }
