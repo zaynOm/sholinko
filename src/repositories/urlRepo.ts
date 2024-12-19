@@ -45,16 +45,9 @@ export async function createNewLink(data: formType) {
   );
 }
 
-async function getLinksCount(userId: string) {
-  const { database } = await createAdminClient();
-
-  const result = await database.listDocuments(
-    env.DATABASE_ID,
-    env.COLLECTION_LINKS_ID,
-    [Query.equal("userId", userId)],
-  );
-
-  return result.documents.length;
+async function getLinksCount() {
+  const links = await getLinksList();
+  return links.length;
 }
 
 async function generateSlug() {
