@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { createUrl } from "@/repositories/urlRepo";
+import { useState } from "react";
 
 const formSchema = z.object({
   originalUrl: z.string().url(),
@@ -31,21 +31,29 @@ export default function Page() {
       title: "",
     },
   });
+  const [loading, setLoading] = useState(false);
 
   async function onSubmit(values: formType) {
-    const res = await fetch("/api/url", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    if (res.ok) {
-      console.log(res.json());
+    setLoading(true);
+    try {
+      const res = await fetch("/api/url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      if (res.ok) {
+        const body = await res.json();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="grid place-items-center gap-4">
-      <h2 className="text-3xl font-bold py-12">Create a link</h2>
+      <h2 className="text-3xl font-bold py-10">Create a link</h2>
       <div className="w-1/2 bg-card p-24 rounded-lg">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -94,7 +102,16 @@ export default function Page() {
               )}
             />
 
-            <Button type="submit">Create Link</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader className="animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Link"
+              )}
+            </Button>
           </form>
         </Form>
       </div>
