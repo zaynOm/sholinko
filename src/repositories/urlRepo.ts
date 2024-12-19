@@ -37,7 +37,7 @@ export async function createNewLink(data: formType) {
     shortUrl: slug,
   };
 
-  await database.createDocument(
+  return await database.createDocument(
     env.DATABASE_ID,
     env.COLLECTION_LINKS_ID,
     ID.unique(),
