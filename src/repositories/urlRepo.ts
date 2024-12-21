@@ -6,6 +6,21 @@ import { formType } from "@/app/dashboard/links/new/page";
 import { randomBytes } from "crypto";
 import { Link } from "@/app/dashboard/links/columns";
 
+export async function getLinkBySlug(slug: string) {
+  const { database } = await createAdminClient();
+
+  const result = await database.listDocuments(
+    env.DATABASE_ID,
+    env.COLLECTION_LINKS_ID,
+    [Query.equal("shortUrl", slug)],
+  );
+
+  if (result.documents.length > 0) {
+    return result.documents[0];
+  }
+  return null;
+}
+
 export async function getLinksList(): Promise<Link[]> {
   const { database } = await createAdminClient();
   const user = await getLoggedInUser();
