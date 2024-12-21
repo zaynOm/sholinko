@@ -6,6 +6,25 @@ import { formType } from "@/app/dashboard/links/new/page";
 import { randomBytes } from "crypto";
 import { Link } from "@/app/dashboard/links/columns";
 
+type LinkUpdate = {
+  clicks?: string;
+  active?: boolean;
+};
+
+export async function updateLinkByDocumentId(
+  documentId: string,
+  data: LinkUpdate,
+) {
+  const { database } = await createAdminClient();
+
+  await database.updateDocument(
+    env.DATABASE_ID,
+    env.COLLECTION_LINKS_ID,
+    documentId,
+    data,
+  );
+}
+
 export async function getLinkBySlug(slug: string) {
   const { database } = await createAdminClient();
 
