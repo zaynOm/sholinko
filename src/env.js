@@ -8,5 +8,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APPWRITE_PROJECT: z.string(),
     DATABASE_ID: z.string(),
     COLLECTION_LINKS_ID: z.string(),
+    COLLECTION_VIEWERS_ID: z.string(),
+    GEO_API_KEY: z.string(),
   },
 });
