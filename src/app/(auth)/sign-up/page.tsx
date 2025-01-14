@@ -1,13 +1,9 @@
 import { Separator } from "@/components/ui/separator";
-import { getLoggedInUser, signUpWithGoogle } from "@/repositories/authRepo";
+import { signUpWithGoogle } from "@/repositories/authRepo";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 
 export default async function SignUpPage() {
-  const user = await getLoggedInUser();
-  if (user) redirect("/dashboard");
-
   return (
     <>
       <div className="grid place-items-center h-screen">
