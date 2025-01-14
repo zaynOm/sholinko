@@ -1,15 +1,20 @@
+import { formType } from "@/app/dashboard/links/new/page";
 import { env } from "@/env";
 import { createAdminClient } from "@/lib/server/appwrite";
+import { randomBytes } from "crypto";
 import { ID, Query } from "node-appwrite";
 import { getLoggedInUser } from "./authRepo";
-import { formType } from "@/app/dashboard/links/new/page";
-import { randomBytes } from "crypto";
-import { Link } from "@/app/dashboard/links/columns";
+import { Link, LinkUpdate } from "@/types/links";
 
-type LinkUpdate = {
-  clicks?: string;
-  active?: boolean;
-};
+export async function deleteLinkByDocumentId(documentId: string) {
+  const { database } = await createAdminClient();
+
+  await database.deleteDocument(
+    env.DATABASE_ID,
+    env.COLLECTION_LINKS_ID,
+    documentId,
+  );
+}
 
 export async function updateLinkByDocumentId(
   documentId: string,
@@ -25,7 +30,7 @@ export async function updateLinkByDocumentId(
   );
 }
 
-export async function getLinkBySlug(slug: string) {
+export async function getLinkBySlug(slug: string): Promise<Link | null> {
   const { database } = await createAdminClient();
 
   const result = await database.listDocuments(
@@ -35,7 +40,7 @@ export async function getLinkBySlug(slug: string) {
   );
 
   if (result.documents.length > 0) {
-    return result.documents[0];
+    return result.documents[0] as Link;
   }
   return null;
 }
@@ -52,7 +57,7 @@ export async function getLinksList(): Promise<Link[]> {
     [Query.equal("userId", user.$id), Query.orderDesc("$createdAt")],
   );
 
-  return result.documents;
+  return result.documents as Link[];
 }
 
 export async function createNewLink(data: formType) {
@@ -85,7 +90,8 @@ async function getLinksCount() {
 }
 
 async function generateSlug() {
-  const slug = randomBytes(5).toString("base64").slice(0, 5);
+  const slug = randomBytes(10).toString("base64").replace("/", "").slice(0, 5);
+
   if (!isSlugAvailibale(slug)) {
     generateSlug();
   }

@@ -1,4 +1,4 @@
-import { createNewLink } from "@/repositories/urlRepo";
+import { createNewLink } from "@/repositories/linkRepo";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
